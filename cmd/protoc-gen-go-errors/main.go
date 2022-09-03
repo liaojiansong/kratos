@@ -26,6 +26,7 @@ func main() {
 				continue
 			}
 			generateFile(gen, f)
+			generateDefault(gen, f)
 		}
 		return nil
 	})

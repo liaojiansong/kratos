@@ -1,6 +1,8 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func Test_case2Camel(t *testing.T) {
 	type args struct {
@@ -59,4 +61,17 @@ func Test_case2Camel(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestDemo(t *testing.T) {
+
+	str := `// 验证码失效或已过期`
+	target := `//             `
+	for i := 0; i < len(target); i++ {
+		if target[i] == str[i] {
+			continue
+		}
+
+	}
+
 }

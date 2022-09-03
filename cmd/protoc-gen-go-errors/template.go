@@ -25,13 +25,25 @@ func Error{{ .CamelValue }}(format string, args ...interface{}) *errors.Error {
 {{- end }}
 `
 
+var defaultTemplate = `
+{{ range .Errors }}
+
+{{ if .HasComment }}{{ .Comment }}{{ end -}}
+func Default{{ .CamelValue }}() *errors.Error {
+	 return errors.New({{ .HTTPCode }}, {{ .Name }}_{{ .Value }}.String(), "{{ .CommentPure }}")
+}
+
+{{- end }}
+`
+
 type errorInfo struct {
-	Name       string
-	Value      string
-	HTTPCode   int
-	CamelValue string
-	Comment    string
-	HasComment bool
+	Name        string
+	Value       string
+	HTTPCode    int
+	CamelValue  string
+	Comment     string
+	HasComment  bool
+	CommentPure string
 }
 
 type errorWrapper struct {
@@ -41,6 +53,18 @@ type errorWrapper struct {
 func (e *errorWrapper) execute() string {
 	buf := new(bytes.Buffer)
 	tmpl, err := template.New("errors").Parse(errorsTemplate)
+	if err != nil {
+		panic(err)
+	}
+	if err := tmpl.Execute(buf, e); err != nil {
+		panic(err)
+	}
+	return buf.String()
+}
+
+func (e *errorWrapper) executeDefault() string {
+	buf := new(bytes.Buffer)
+	tmpl, err := template.New("default").Parse(defaultTemplate)
 	if err != nil {
 		panic(err)
 	}
