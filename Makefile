@@ -77,3 +77,8 @@ test-coverage:
 lint: $(LINTER)
 	@${TOOLS_SHELL} lint
 	@echo "lint check finished"
+
+.PHONY: install-kratos
+install-kratos:
+	@cd cmd/kratos && go build && cd - &> /dev/null
+	@cp ./cmd/kratos/kratos /usr/local/go/bin/
